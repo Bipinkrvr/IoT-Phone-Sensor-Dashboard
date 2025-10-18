@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IoT & Automation Dashboard | Redmi 6 Pro</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>📟 IoT & Automation Dashboard — Redmi 6 Pro</h1>
+    <p class="sub-title">Created by Bipin Kumar — All rights reserved</p>
+    <div id="live-timestamp" aria-live="polite"></div>
+    <div class="header-actions">
+      <button id="dark-toggle" aria-label="Toggle dark mode">🌓</button>
+      <button id="export-csv" aria-label="Export CSV">⬇️ Export CSV</button>
+    </div>
+  </header>
+
+  <div id="loader" class="loader" hidden>⏳ Loading...</div>
+  <div id="toast" class="toast" hidden></div>
+
+  <main>
+    <!-- Live mini-cards -->
+    <section id="live-data" aria-live="polite"></section>
+
+    <!-- Search & dropdown -->
+    <div class="controls">
+      <input type="text" id="search-input" placeholder="🔍 Search sensor..." aria-label="Search sensor" />
+      <select id="sensor-dropdown" class="dropdown-select" aria-label="Select sensor"></select>
+    </div>
+
+    <!-- Pinned section -->
+    <section id="pinned-section" class="pinned-section"></section>
+
+    <!-- Table -->
+    <div class="table-container">
+      <table class="sensor-table">
+        <thead>
+          <tr>
+            <th scope="col" class="col-icon">🔧</th>
+            <th scope="col" class="col-name">📛 Name</th>
+            <th scope="col" class="col-value">📊 Value</th>
+          </tr>
+        </thead>
+        <tbody id="sensor-table"></tbody>
+      </table>
+    </div>
+
+    <!-- Graphs -->
+    <div id="graphs"></div>
+  </main>
+
+  <script type="module" src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
