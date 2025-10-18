@@ -39,21 +39,7 @@ Here is a look at the dashboard in action.
 
 This diagram shows how data flows from the phone's hardware to your browser.
 
-```mermaid
-graph TD
-    subgraph Phone (Termux)
-        A[Phone Sensors] --> B(scripts/logger.py);
-        B --> C[Stream @ :5000];
-    end
-
-    subgraph Phone (Virtual Ubuntu)
-        D(app/dashboard.py) --> E{routes.py Proxy};
-        E --> C;
-    end
-
-    F[Your Browser] --> G(View @ :5050);
-    G --> D;
-````
+![Project Flowchart](./assets/flowchart.png)
 
 -----
 
