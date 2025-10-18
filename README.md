@@ -1,5 +1,4 @@
 
-````markdown
 # IoT Phone Sensor Dashboard (Only Android is used)
 
 This project **upcycles an abandoned Android phone** into a powerful, real-time IoT sensor hub.
@@ -149,5 +148,4 @@ This project is designed to be run entirely from your phone's Termux terminal.
 
 <!-- end list -->
 
-```
 ```
