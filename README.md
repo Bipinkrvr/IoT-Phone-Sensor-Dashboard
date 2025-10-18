@@ -32,9 +32,6 @@ Here is a look at the dashboard in action.
 **Live Sensor Cards & Table:**
 ![Live Data Cards](./assets/screenshot-livedata.png)
 
-**Pinned Sensors & Dark Mode:**
-![Pinned Sensors in Dark Mode](./assets/screenshot-darkmode.png)
-
 
 ---
 
@@ -59,21 +56,22 @@ graph TD
 ````
 
 -----
+
 ## ✨ Features
 
-* **Real-Time Data:** Streams sensor data from Termux to the web dashboard using Server-Sent Events (SSE).
-* **Auto-Reconnecting:** The dashboard automatically detects connection loss (e.g., if the logger crashes) and attempts to reconnect every 3 seconds.
-* **Interactive Plotly.js Charts:**
-    * Toggle between **Combined (XYZ)** or **Separate (X, Y, Z)** axis views.
-    * Filter to view individual axes (e.g., just X or Y).
-    * **Fullscreen mode** for detailed analysis.
-    * **Download any chart as a PNG image.**
-* **Live-Updating Table:** A searchable table of all sensor values, updated in real-time.
-* **Live Trend Cards:** At-a-glance cards showing sensor values and their trends (⬆️ ⬇️).
-* **Dynamic UI:** Pin your favorite sensors, filter by sensor, search all values, and toggle dark mode.
-* **Dual-Environment Architecture:** A `logger.py` script in Termux streams raw data, while the `dashboard.py` in Ubuntu serves the UI, eliminating cross-origin (CORS) issues.
-* **CSV Export & Logging:** The Termux script saves all data to a `.csv` file, which can be exported from the dashboard.
-* **Automated Startup:** A single `start.sh` script handles starting both servers in their correct environments.
+  * **Real-Time Data:** Streams sensor data from Termux to the web dashboard using Server-Sent Events (SSE).
+  * **Auto-Reconnecting:** The dashboard automatically detects connection loss (e.g., if the logger crashes) and attempts to reconnect every 3 seconds.
+  * **Interactive Plotly.js Charts:**
+      * Toggle between **Combined (XYZ)** or **Separate (X, Y, Z)** axis views.
+      * Filter to view individual axes (e.g., just X or Y).
+      * **Fullscreen mode** for detailed analysis.
+      * **Download any chart as a PNG image.**
+  * **Live-Updating Table:** A searchable table of all sensor values, updated in real-time.
+  * **Live Trend Cards:** At-a-glance cards showing sensor values and their trends (⬆️ ⬇️).
+  * **Dynamic UI:** Pin your favorite sensors, filter by sensor, search all values, and toggle dark mode.
+  * **Dual-Environment Architecture:** A `logger.py` script in Termux streams raw data, while the `dashboard.py` in Ubuntu serves the UI, eliminating cross-origin (CORS) issues.
+  * **CSV Export & Logging:** The Termux script saves all data to a `.csv` file, which can be exported from the dashboard.
+  * **Automated Startup:** A single `start.sh` script handles starting both servers in their correct environments.
 
 -----
 
@@ -167,4 +165,3 @@ This project is designed to be run entirely from your phone's Termux terminal.
 
 ```
 ```
-
