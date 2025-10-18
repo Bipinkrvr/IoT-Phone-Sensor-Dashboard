@@ -37,7 +37,7 @@ Here is a look at the dashboard in action.
 
 ## 🌊 Project Flowchart
 
-This diagram shows how data flows from the phone's hardware to your browser.
+This diagram shows how data flows from the phone's hardware to browser.
 
 ![Project Flowchart](./assets/flowchart.png)
 
