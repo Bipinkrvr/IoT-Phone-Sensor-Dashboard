@@ -1,4 +1,3 @@
-
 import subprocess
 import csv
 import json
@@ -15,6 +14,7 @@ CSV_PATH = os.path.expanduser("~/redmiedge/data/sensor_log.csv")
 WINDOW = 150 # how many samples to keep & stream
 INTERVAL = 0.5 # seconds between pushes
 WRITE_CSV = True # keep csv history
+WRITE_BATCH_SIZE = 20 # How many rows to buffer before writing to disk <<< NEW
 HOST = "0.0.0.0"
 PORT = 5000
 # ----------------------------------
@@ -47,7 +47,27 @@ if WRITE_CSV:
     with open(CSV_PATH, "w", newline="") as f:
         csv.writer(f).writerow(COLUMN_NAMES)
 
+# Buffer for streaming (fast, in-memory)
 buffer = deque(maxlen=WINDOW)
+# Buffer for batch-writing to CSV (to avoid I/O contention)
+csv_write_buffer = [] # <<< NEW
+
+
+# <<< NEW: Function to flush the CSV buffer to disk
+def flush_csv_buffer():
+    """Writes any remaining rows in the csv_write_buffer to the file."""
+    if WRITE_CSV and csv_write_buffer:
+        print(f"[logger] Flushing {len(csv_write_buffer)} remaining rows to CSV...")
+        try:
+            with open(CSV_PATH, "a", newline="") as f:
+                csv.writer(f).writerows(csv_write_buffer)
+            csv_write_buffer.clear()
+            print("[logger] ...Flush complete.")
+        except Exception as e:
+            print(f"[logger] Error flushing CSV buffer: {e}")
+    else:
+        print("[logger] No CSV data to flush.")
+
 
 def list_device_sensors() -> List[str]:
     try:
@@ -229,11 +249,16 @@ def sampler_loop():
                     row_dict[key] = value
                     csv_row.append(value)
 
+            # Add to the streaming buffer (always)
             buffer.append(row_dict)
 
+            # Add to the CSV buffer (if enabled)
             if WRITE_CSV:
-                with open(CSV_PATH, "a", newline="") as f:
-                    csv.writer(f).writerow(csv_row)
+                csv_write_buffer.append(csv_row) # <<< CHANGED
+                
+                # Check if the buffer is full and needs to be flushed
+                if len(csv_write_buffer) >= WRITE_BATCH_SIZE: # <<< NEW
+                    flush_csv_buffer() # <<< NEW
 
             time.sleep(INTERVAL)
 
@@ -267,6 +292,9 @@ def sensor_data():
 
 @app.route("/export")
 def export_csv():
+    # Flush any remaining buffer before exporting
+    flush_csv_buffer() # <<< NEW
+    
     if not WRITE_CSV or not os.path.exists(CSV_PATH):
         resp = make_response(jsonify({"error": "CSV not available"}), 404)
         return add_cors(resp)
@@ -277,7 +305,16 @@ def run():
     t = threading.Thread(target=sampler_loop, daemon=True)
     t.start()
     print(f"[logger] SSE server at http://{HOST}:{PORT}/sensor-stream")
-    app.run(host=HOST, port=PORT, threaded=True)
+    
+    # <<< CHANGED: Wrap app.run in try/finally to catch Ctrl+C
+    try:
+        app.run(host=HOST, port=PORT, threaded=True)
+    except KeyboardInterrupt:
+        print("\n[logger] Shutdown requested...")
+    finally:
+        # This is CRITICAL: ensures the last batch is saved when you stop the server
+        print("[logger] Cleaning up...")
+        flush_csv_buffer()
 
 if __name__ == "__main__":
     run()
